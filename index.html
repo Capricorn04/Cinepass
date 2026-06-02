@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinePass - Premium Ticketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo" onclick="goHome()">Cine<span>Pass</span></div>
+        <div class="header-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search for Movies, Events, Plays...">
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" onclick="toggleTheme()" class="theme-btn"><span class="icon">🌙</span></button>
+            <button id="city-btn" onclick="openCityModal()">Hyderabad <span class="arrow">▼</span></button>
+            <button class="sign-in-btn">Sign in</button>
+        </div>
+    </header>
+
+    <div id="city-modal-overlay" class="modal-overlay city-overlay hidden" onclick="closeCityModal(event)">
+        <div class="city-modal-content" onclick="event.stopPropagation()">
+            <div class="city-search-bar">
+    <span>🔍</span>
+    <input type="text" id="city-search-input" placeholder="Search for your city" oninput="filterCities()">
+</div>
+            <button class="detect-location">⌖ Detect my location</button>
+            <h4 class="popular-cities-title">Popular Cities</h4>
+            <div class="city-grid">
+                <div class="city-item" onclick="selectCity('Mumbai')"><div class="city-icon">🏛️</div>Mumbai</div>
+                <div class="city-item" onclick="selectCity('Delhi-NCR')"><div class="city-icon">⛩️</div>Delhi-NCR</div>
+                <div class="city-item" onclick="selectCity('Bengaluru')"><div class="city-icon">🏢</div>Bengaluru</div>
+                <div class="city-item" onclick="selectCity('Hyderabad')"><div class="city-icon">🕌</div>Hyderabad</div>
+                <div class="city-item" onclick="selectCity('Chandigarh')"><div class="city-icon">🏙️</div>Chandigarh</div>
+                <div class="city-item" onclick="selectCity('Ahmedabad')"><div class="city-icon">🏭</div>Ahmedabad</div>
+                <div class="city-item" onclick="selectCity('Pune')"><div class="city-icon">🏰</div>Pune</div>
+                <div class="city-item" onclick="selectCity('Chennai')"><div class="city-icon">🛕</div>Chennai</div>
+                <div class="city-item" onclick="selectCity('Kolkata')"><div class="city-icon">🌉</div>Kolkata</div>
+                <div class="city-item" onclick="selectCity('Kochi')"><div class="city-icon">🌴</div>Kochi</div>
+            </div>
+            <p class="view-all-cities">View All Cities</p>
+        </div>
+    </div>
+
+    <main id="home-view" class="container view-section">
+        <h2 class="section-title">Recommended Movies</h2>
+        <div id="movie-list" class="movie-grid"></div>
+    </main>
+
+    <div id="movie-detail-view" class="view-section hidden">
+        <div class="hero-banner">
+            <div class="hero-bg" id="hero-bg-img"></div>
+            <div class="hero-content container">
+                <div class="poster-container">
+                    <img id="hero-poster" src="" alt="Movie Poster" class="hero-poster">
+                    <div class="in-cinemas-tag">In cinemas</div>
+                </div>
+                <div class="hero-info">
+                    <h1 id="hero-title">Movie Title</h1>
+                    <div class="rating-box glass-panel">
+                        <span class="star">★</span> 
+                        <span id="hero-rating" class="rating-score">9.3/10</span>
+                        <span id="hero-votes" class="rating-votes">(86.5K+ Votes)</span>
+                        <button class="rate-btn">Rate now</button>
+                    </div>
+                    <div class="movie-meta">
+                        <span class="meta-tag" id="hero-tags">2D, IMAX</span>
+                        <span class="meta-tag">English, Hindi</span>
+                    </div>
+                    <p id="hero-duration-genre" class="duration-genre">2h 10m • Biography, Drama • UA13+</p>
+                    <button class="primary-gradient-btn hero-book-btn" onclick="openTheaterList()">Book tickets</button>
+                </div>
+            </div>
+        </div>
+        <div class="container about-section">
+            <h3>About the movie</h3>
+            <p id="hero-desc">Movie description goes here.</p>
+        </div>
+    </div>
+
+    <div id="theater-list-view" class="view-section hidden">
+        <div class="container">
+            <h2 id="theater-movie-title" class="theater-header-title">Movie Title</h2>
+            <div class="theater-badges">
+                <span class="t-badge">IMAX 2D</span>
+                <span class="t-badge">UA13+</span>
+            </div>
+        </div>
+        
+        <div class="date-strip-container">
+            <div class="container date-list" id="date-list"></div>
+        </div>
+
+        <div class="container theater-wrapper">
+            <div class="legend-row">
+                <span><span class="dot avail"></span> AVAILABLE</span>
+                <span><span class="dot fast"></span> FAST FILLING</span>
+            </div>
+            <div id="theater-list" class="theater-list"></div>
+        </div>
+    </div>
+
+    <div id="seat-map-view" class="view-section hidden seat-map-page">
+        <header class="seat-map-header">
+            <button class="back-icon" onclick="backToTheaters()">←</button>
+            <div class="seat-header-info">
+                <h3 id="seat-movie-title">Movie Title</h3>
+                <p id="seat-theater-info">Theater Name | Date | Time</p>
+            </div>
+        </header>
+        
+        <div class="seat-map-container">
+            <div class="screen-container">
+                <div class="screen"></div>
+                <p class="screen-text">SCREEN THIS WAY</p>
+            </div>
+            
+            <div class="theater-layout">
+                <div id="seat-grid" class="seat-grid"></div>
+            </div>
+        </div>
+        
+        <div class="checkout-footer glass-panel">
+            <div class="checkout-details">
+                <span id="selected-count-display">0 Tickets</span>
+                <strong id="price-display">₹0</strong>
+            </div>
+            <button id="checkout-btn" class="primary-gradient-btn checkout-action" disabled onclick="simulateCheckout()">Pay Now</button>
+        </div>
+    </div>
+
+    <div id="qty-modal-overlay" class="modal-overlay hidden">
+        <div class="qty-modal-content glass-panel">
+            <button class="close-modal" onclick="closeQtyModal()">✕</button>
+            <h3>How Many Seats?</h3>
+            <div class="illustration" id="qty-illustration">🍿</div>
+            <div id="qty-list" class="qty-circle-list"></div>
+            <button id="confirm-qty-btn" class="primary-gradient-btn full-width-btn" disabled onclick="confirmQuantity()">Select Seats</button>
+        </div>
+    </div>
+
+    <div id="checkout-view" class="view-section hidden">
+        <div class="container checkout-page-layout">
+            <div class="checkout-form-container glass-panel">
+                <h2>Secure Payment</h2>
+                <div class="timer-box">
+                    Time remaining to complete payment: <strong id="countdown-timer">10:00</strong>
+                </div>
+                
+                <form id="payment-form" onsubmit="processPayment(event)">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" required placeholder="name@example.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Card Number</label>
+                        <input type="text" required pattern="\d{16}" placeholder="1234 5678 9101 1121" maxlength="16">
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Expiry Date</label>
+                            <input type="text" required placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="input-group">
+                            <label>CVV</label>
+                            <input type="password" required placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    <button type="submit" id="pay-now-btn" class="primary-gradient-btn full-width-btn" style="margin-top: 20px;">
+                        Pay ₹<span id="checkout-final-price">0</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="order-summary glass-panel">
+                <h3>Order Summary</h3>
+                <div class="summary-movie" id="summary-movie-title">Movie Title</div>
+                <div class="summary-details" id="summary-details">Theater | Time</div>
+                <div class="summary-seats">Seats: <strong id="summary-seats">A1, A2</strong></div>
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+                <div class="summary-total">
+                    <span>Total Amount</span>
+                    <strong id="summary-total-price">₹0</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ticket-view" class="view-section hidden">
+        <div class="ticket-container">
+            <div class="ticket-header">
+                <div class="success-check">✓</div>
+                <h2>Booking Confirmed!</h2>
+                <p>Your M-Ticket is ready.</p>
+            </div>
+            
+            <div class="ticket-body">
+                <img id="ticket-poster" src="" alt="Movie">
+                <div class="ticket-info">
+                    <h3 id="ticket-movie-title">Movie Title</h3>
+                    <p class="ticket-meta"><span id="ticket-theater">Theater</span></p>
+                    <p class="ticket-meta"><span id="ticket-time">Time</span></p>
+                    
+                    <div class="ticket-seats-row">
+                        <div class="t-box">
+                            <span>Seats</span>
+                            <strong id="ticket-seats">A1, A2</strong>
+                        </div>
+                        <div class="t-box">
+                            <span>Amount Paid</span>
+                            <strong id="ticket-price">₹0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ticket-divider"></div>
+            
+            <div class="ticket-footer">
+                <p>Booking ID: <strong id="booking-id">BMS987654</strong></p>
+                <div class="barcode-area">|| ||| | |||| || | || |||</div>
+            </div>
+        </div>
+        <div class="container" style="text-align: center; margin-top: 20px;">
+            <button class="primary-gradient-btn" style="padding: 12px 40px;" onclick="goHome()">Back to Home</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
